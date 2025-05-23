@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
-  Optional<Employee> findByIdAndEmpName(String empId, String empName);
+  Optional<Employee> findByEmpIdAndEmpName(String empId, String empName);
   List<Employee> findByEmpNameLike(String empName);
 }

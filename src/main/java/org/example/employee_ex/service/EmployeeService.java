@@ -26,9 +26,6 @@ public class EmployeeService {
 
   @Transactional
   public Employee save(EmployeeCreateRequestDto employeeDto) {
-    Employee employee1 = new Employee();
-    employee1.setEmpId(employeeDto.getEmpId());
-
     Employee employee = Employee.builder()
         .empId(employeeDto.getEmpId())
         .empName(employeeDto.getEmpName())
@@ -36,7 +33,8 @@ public class EmployeeService {
         .joinDate(employeeDto.getJoinDate())
         .salary(employeeDto.getSalary())
         .build();
-    return null;
+    Employee save = employeeRepository.save(employee);
+    return save;
   }
 
   @Transactional
