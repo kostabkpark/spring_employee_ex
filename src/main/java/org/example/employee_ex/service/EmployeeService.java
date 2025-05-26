@@ -57,10 +57,13 @@ public class EmployeeService {
   }
 
    public EmployeeResponseDto update(String empId,EmployeeUpdateRequestDto employee) {
-     // 비즈니스 로직 - 단 department 만 수정가능함
+     // 비즈니스 로직 - 단 empname과 department 가 수정가능함
      Optional<Employee> byId = employeeRepository.findById(empId);
      if(byId.isPresent()) {
        Employee e = byId.get();
+       if(employee.getEmpName() != null && !employee.getEmpName().isBlank() ) {
+         e.setEmpName(employee.getEmpName());
+       }
        e.setDepartment(employee.getDepartment());
        Employee save = employeeRepository.save(e);
        return new EmployeeResponseDto(save.getEmpId(), save.getEmpName(), save.getDepartment());
@@ -69,6 +72,8 @@ public class EmployeeService {
      }
    }
 
-  public void delete(int id) {}
+  public void delete(String empId) {
+    employeeRepository.deleteById(empId);
+  }
 
 }
