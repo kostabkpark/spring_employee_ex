@@ -27,4 +27,9 @@ public class EmployeeController {
   public List<EmployeeReponseDto> getAllEmployees() {
     return employeeService.findAll();
   }
+
+  @GetMapping("/{empId}")
+  public EmployeeReponseDto getEmployee(@PathVariable String empId) {
+    return employeeService.findById(empId);
+  }
 }
