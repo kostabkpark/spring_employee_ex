@@ -56,7 +56,7 @@ public class EmployeeService {
     return saveDto;
   }
 
-   public EmployeeResponseDto update(EmployeeUpdateRequestDto employee) {i
+   public EmployeeResponseDto update(EmployeeUpdateRequestDto employee) {
      // 비즈니스 로직 - 단 department 만 수정가능함
      Optional<Employee> byId = employeeRepository.findById(employee.getEmpId());
      if(byId.isPresent()) {
