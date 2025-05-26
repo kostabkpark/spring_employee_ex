@@ -5,6 +5,5 @@ import lombok.Data;
 
 @Data
 public class EmployeeUpdateRequestDto {
-  private String empId;
   private String department;
 }

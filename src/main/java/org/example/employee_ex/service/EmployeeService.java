@@ -56,14 +56,14 @@ public class EmployeeService {
     return saveDto;
   }
 
-   public EmployeeResponseDto update(EmployeeUpdateRequestDto employee) {
+   public EmployeeResponseDto update(String empId,EmployeeUpdateRequestDto employee) {
      // 비즈니스 로직 - 단 department 만 수정가능함
-     Optional<Employee> byId = employeeRepository.findById(employee.getEmpId());
+     Optional<Employee> byId = employeeRepository.findById(empId);
      if(byId.isPresent()) {
        Employee e = byId.get();
        e.setDepartment(employee.getDepartment());
-       employeeRepository.save(e);
-       return new EmployeeResponseDto(e.getEmpId(), e.getEmpName(), e.getDepartment());
+       Employee save = employeeRepository.save(e);
+       return new EmployeeResponseDto(save.getEmpId(), save.getEmpName(), save.getDepartment());
      } else {
        return null;
      }

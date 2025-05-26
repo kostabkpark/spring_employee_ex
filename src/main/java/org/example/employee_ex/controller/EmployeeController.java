@@ -32,7 +32,8 @@ public class EmployeeController {
   }
 
   @PutMapping("/{empId}")
-  public EmployeeResponseDto updateDepartment(@PathVariable EmployeeUpdateRequestDto updateRequestDto) {
-    return employeeService.update(updateRequestDto);
+  public EmployeeResponseDto updateDepartment(@PathVariable String empId,
+                                              @RequestBody EmployeeUpdateRequestDto updateRequestDto) {
+    return employeeService.update(empId, updateRequestDto);
   }
 }
