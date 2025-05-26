@@ -1,12 +1,10 @@
 package org.example.employee_ex.controller;
 
-import jakarta.persistence.Access;
-import org.example.employee_ex.domain.Employee;
 import org.example.employee_ex.dto.EmployeeCreateRequestDto;
-import org.example.employee_ex.dto.EmployeeReponseDto;
+import org.example.employee_ex.dto.EmployeeResponseDto;
+import org.example.employee_ex.dto.EmployeeUpdateRequestDto;
 import org.example.employee_ex.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,18 +16,23 @@ public class EmployeeController {
   private EmployeeService employeeService;
 
   @PostMapping
-  public EmployeeReponseDto createEmployee(@RequestBody EmployeeCreateRequestDto employeeDto) {
-    EmployeeReponseDto save = employeeService.save(employeeDto);
+  public EmployeeResponseDto createEmployee(@RequestBody EmployeeCreateRequestDto employeeDto) {
+    EmployeeResponseDto save = employeeService.save(employeeDto);
     return save;
   }
 
   @GetMapping
-  public List<EmployeeReponseDto> getAllEmployees() {
+  public List<EmployeeResponseDto> getAllEmployees() {
     return employeeService.findAll();
   }
 
   @GetMapping("/{empId}")
-  public EmployeeReponseDto getEmployee(@PathVariable String empId) {
+  public EmployeeResponseDto getEmployee(@PathVariable String empId) {
     return employeeService.findById(empId);
+  }
+
+  @PutMapping("/{empId}")
+  public EmployeeResponseDto updateDepartment(@PathVariable EmployeeUpdateRequestDto updateRequestDto) {
+    employeeService.update(updateRequestDto);
   }
 }

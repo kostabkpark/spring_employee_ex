@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
-public class EmployeeReponseDto {
+public class EmployeeUpdateRequestDto {
   private String empId;
-  private String empName;
   private String department;
 }

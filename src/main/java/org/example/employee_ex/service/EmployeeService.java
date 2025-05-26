@@ -5,7 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.example.employee_ex.domain.Employee;
 import org.example.employee_ex.dto.EmployeeCreateRequestDto;
-import org.example.employee_ex.dto.EmployeeReponseDto;
+import org.example.employee_ex.dto.EmployeeResponseDto;
+import org.example.employee_ex.dto.EmployeeUpdateRequestDto;
 import org.example.employee_ex.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,25 +24,26 @@ public class EmployeeService {
   private EmployeeRepository employeeRepository;
 
   @Transactional(readOnly = true)
-  public List<EmployeeReponseDto> findAll() {
+  public List<EmployeeResponseDto> findAll() {
     List<Employee> doAll = employeeRepository.findAll();
-    List<EmployeeReponseDto> dtoAll = doAll.stream().map(e -> new EmployeeReponseDto(e.getEmpId(), e.getEmpName(), e.getDepartment()))
+    List<EmployeeResponseDto> dtoAll = doAll.stream().map(e -> new EmployeeResponseDto(e.getEmpId(), e.getEmpName(), e.getDepartment()))
         .collect(Collectors.toList());
     return dtoAll;
   }
 
-  public EmployeeReponseDto findById(String empId) {
+  @Transactional(readOnly = true)
+  public EmployeeResponseDto findById(String empId) {
     Optional<Employee> byId = employeeRepository.findById(empId);
     if (byId.isPresent()) {
       Employee e = byId.get();
-      EmployeeReponseDto employeeDto = new EmployeeReponseDto(e.getEmpId(), e.getEmpName(), e.getDepartment());
+      EmployeeResponseDto employeeDto = new EmployeeResponseDto(e.getEmpId(), e.getEmpName(), e.getDepartment());
       return employeeDto;
     } else {
       return null;
     }
   }
 
-  public EmployeeReponseDto save(EmployeeCreateRequestDto employeeDto) {
+  public EmployeeResponseDto save(EmployeeCreateRequestDto employeeDto) {
     Employee employee = Employee.builder()
         .empId(employeeDto.getEmpId())
         .empName(employeeDto.getEmpName())
@@ -50,13 +52,23 @@ public class EmployeeService {
         .salary(employeeDto.getSalary())
         .build();
     Employee save = employeeRepository.save(employee);
-    EmployeeReponseDto saveDto = new EmployeeReponseDto(save.getEmpId(), save.getEmpName(), save.getDepartment());
+    EmployeeResponseDto saveDto = new EmployeeResponseDto(save.getEmpId(), save.getEmpName(), save.getDepartment());
     return saveDto;
   }
 
-  @Transactional
-  public Employee update(Employee employee) {return null;}
-  @Transactional
+   public EmployeeResponseDto update(EmployeeUpdateRequestDto employee) {i
+     // 비즈니스 로직 - 단 department 만 수정가능함
+     Optional<Employee> byId = employeeRepository.findById(employee.getEmpId());
+     if(byId.isPresent()) {
+       Employee e = byId.get();
+       e.setDepartment(employee.getDepartment());
+       employeeRepository.save(e);
+       return new EmployeeResponseDto(e.getEmpId(), e.getEmpName(), e.getDepartment());
+     } else {
+       return null;
+     }
+   }
+
   public void delete(int id) {}
 
 }
