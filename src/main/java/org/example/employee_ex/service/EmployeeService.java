@@ -31,7 +31,8 @@ public class EmployeeService {
 
   @Transactional(readOnly = true)
   public List<EmployeeResponseDto> findAll() {
-    List<Employee> doAll = employeeRepository.findAll();
+    //List<Employee> doAll = employeeRepository.findAll();
+    List<Employee> doAll = employeeRepository.findByUserAllDept();
     List<EmployeeResponseDto> dtoAll = doAll.stream().map(
         e -> new EmployeeResponseDto(
             e.getEmpId(),
