@@ -1,8 +1,6 @@
 package org.example.employee_ex.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -15,8 +13,9 @@ public class Employee {
   private String empId;
   @Column(length = 20, nullable = false)
   private String empName;
-  @Column(length = 20)
-  private String department;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name="dept_id")
+  private Department department;
   @Column(length = 10)
   private String joinDate;
   private long salary;

@@ -3,10 +3,13 @@ package org.example.employee_ex.service;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.example.employee_ex.domain.Department;
 import org.example.employee_ex.domain.Employee;
 import org.example.employee_ex.dto.EmployeeCreateRequestDto;
 import org.example.employee_ex.dto.EmployeeResponseDto;
 import org.example.employee_ex.dto.EmployeeUpdateRequestDto;
+import org.example.employee_ex.repository.CompanyRepository;
+import org.example.employee_ex.repository.DepartmentRepository;
 import org.example.employee_ex.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +25,15 @@ import java.util.stream.Collectors;
 public class EmployeeService {
   @Autowired
   private EmployeeRepository employeeRepository;
+  @Autowired
+  private DepartmentRepository departmentRepository;
+  @Autowired
+  private CompanyRepository companyRepository;
 
   @Transactional(readOnly = true)
   public List<EmployeeResponseDto> findAll() {
     List<Employee> doAll = employeeRepository.findAll();
-    List<EmployeeResponseDto> dtoAll = doAll.stream().map(e -> new EmployeeResponseDto(e.getEmpId(), e.getEmpName(), e.getDepartment()))
+    List<EmployeeResponseDto> dtoAll = doAll.stream().map(e -> new EmployeeResponseDto(e.getEmpId(), e.getEmpName(), e.getDepartment().getDeptName()))
         .collect(Collectors.toList());
     return dtoAll;
   }
@@ -36,7 +43,7 @@ public class EmployeeService {
     Optional<Employee> byId = employeeRepository.findById(empId);
     if (byId.isPresent()) {
       Employee e = byId.get();
-      EmployeeResponseDto employeeDto = new EmployeeResponseDto(e.getEmpId(), e.getEmpName(), e.getDepartment());
+      EmployeeResponseDto employeeDto = new EmployeeResponseDto(e.getEmpId(), e.getEmpName(), e.getDepartment().getDeptName());
       return employeeDto;
     } else {
       return null;
@@ -44,15 +51,16 @@ public class EmployeeService {
   }
 
   public EmployeeResponseDto save(EmployeeCreateRequestDto employeeDto) {
+    Department dept = departmentRepository.findById(employeeDto.getDeptId()).orElse(null);
     Employee employee = Employee.builder()
         .empId(employeeDto.getEmpId())
         .empName(employeeDto.getEmpName())
-        .department(employeeDto.getDepartment())
+        .department(dept)
         .joinDate(employeeDto.getJoinDate())
         .salary(employeeDto.getSalary())
         .build();
     Employee save = employeeRepository.save(employee);
-    EmployeeResponseDto saveDto = new EmployeeResponseDto(save.getEmpId(), save.getEmpName(), save.getDepartment());
+    EmployeeResponseDto saveDto = new EmployeeResponseDto(save.getEmpId(), save.getEmpName(), save.getDepartment().getDeptName());
     return saveDto;
   }
 
@@ -64,9 +72,9 @@ public class EmployeeService {
        if(employee.getEmpName() != null && !employee.getEmpName().isBlank() ) {
          e.setEmpName(employee.getEmpName());
        }
-       e.setDepartment(employee.getDepartment());
+       e.setDepartment(departmentRepository.findById(employee.getDeptId()).orElse(null));
        Employee save = employeeRepository.save(e);
-       return new EmployeeResponseDto(save.getEmpId(), save.getEmpName(), save.getDepartment());
+       return new EmployeeResponseDto(save.getEmpId(), save.getEmpName(), save.getDepartment().getDeptName());
      } else {
        return null;
      }

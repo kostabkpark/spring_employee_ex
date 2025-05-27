@@ -8,5 +8,5 @@ import lombok.Data;
 public class EmployeeResponseDto {
   private String empId;
   private String empName;
-  private String department;
+  private String deptName;
 }

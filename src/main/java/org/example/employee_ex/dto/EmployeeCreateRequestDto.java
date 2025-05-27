@@ -7,7 +7,7 @@ import lombok.Data;
 public class EmployeeCreateRequestDto {
   private String empId;
   private String empName;
-  private String department;
+  private int deptId;
   private String joinDate;
   private long salary;
 }
