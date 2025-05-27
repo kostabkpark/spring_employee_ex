@@ -2,6 +2,7 @@ package org.example.employee_ex.dto;
 
 import jakarta.persistence.Column;
 import lombok.Data;
+import org.example.employee_ex.domain.Employee;
 
 @Data
 public class EmployeeCreateRequestDto {

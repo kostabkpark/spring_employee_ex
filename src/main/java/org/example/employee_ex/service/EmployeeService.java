@@ -1,6 +1,7 @@
 package org.example.employee_ex.service;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.example.employee_ex.domain.Department;
@@ -22,18 +23,20 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @Transactional
+@RequiredArgsConstructor
 public class EmployeeService {
-  @Autowired
-  private EmployeeRepository employeeRepository;
-  @Autowired
-  private DepartmentRepository departmentRepository;
-  @Autowired
-  private CompanyRepository companyRepository;
+  private final EmployeeRepository employeeRepository;
+  private final DepartmentRepository departmentRepository;
+  private final CompanyRepository companyRepository;
 
   @Transactional(readOnly = true)
   public List<EmployeeResponseDto> findAll() {
     List<Employee> doAll = employeeRepository.findAll();
-    List<EmployeeResponseDto> dtoAll = doAll.stream().map(e -> new EmployeeResponseDto(e.getEmpId(), e.getEmpName(), e.getDepartment().getDeptName()))
+    List<EmployeeResponseDto> dtoAll = doAll.stream().map(
+        e -> new EmployeeResponseDto(
+            e.getEmpId(),
+            e.getEmpName(),
+            e.getDepartment() != null ? e.getDepartment().getDeptName() : "부서정보없음"))
         .collect(Collectors.toList());
     return dtoAll;
   }
@@ -43,7 +46,10 @@ public class EmployeeService {
     Optional<Employee> byId = employeeRepository.findById(empId);
     if (byId.isPresent()) {
       Employee e = byId.get();
-      EmployeeResponseDto employeeDto = new EmployeeResponseDto(e.getEmpId(), e.getEmpName(), e.getDepartment().getDeptName());
+      EmployeeResponseDto employeeDto = new EmployeeResponseDto(
+          e.getEmpId(),
+          e.getEmpName(),
+          e.getDepartment() != null ? e.getDepartment().getDeptName() : "부서정보없음");
       return employeeDto;
     } else {
       return null;

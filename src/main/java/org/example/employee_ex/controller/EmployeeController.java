@@ -1,5 +1,8 @@
 package org.example.employee_ex.controller;
 
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.example.employee_ex.dto.EmployeeCreateRequestDto;
 import org.example.employee_ex.dto.EmployeeResponseDto;
 import org.example.employee_ex.dto.EmployeeUpdateRequestDto;
@@ -11,12 +14,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/employees")
+@RequiredArgsConstructor
+@Slf4j
 public class EmployeeController {
-  @Autowired
-  private EmployeeService employeeService;
+
+  private final EmployeeService employeeService;
 
   @PostMapping
   public EmployeeResponseDto createEmployee(@RequestBody EmployeeCreateRequestDto employeeDto) {
+    log.info("employeeDto : {}", employeeDto);
     EmployeeResponseDto save = employeeService.save(employeeDto);
     return save;
   }
