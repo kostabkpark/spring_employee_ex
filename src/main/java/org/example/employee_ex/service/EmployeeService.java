@@ -56,6 +56,17 @@ public class EmployeeService {
     }
   }
 
+  public List<EmployeeResponseDto> findByEmpDept(int deptId) {
+    List<Employee> byUserDept = employeeRepository.findByUserDept(deptId);
+    List<EmployeeResponseDto> dtoAll = byUserDept.stream().map(
+            e -> new EmployeeResponseDto(
+                e.getEmpId(),
+                e.getEmpName(),
+                e.getDepartment() != null ? e.getDepartment().getDeptName() : "부서정보없음"))
+        .collect(Collectors.toList());
+    return dtoAll;
+  }
+
   public EmployeeResponseDto save(EmployeeCreateRequestDto employeeDto) {
     Department dept = departmentRepository.findById(employeeDto.getDeptId()).orElse(null);
     Employee employee = Employee.builder()

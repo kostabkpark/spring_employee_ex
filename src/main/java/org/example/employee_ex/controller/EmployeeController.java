@@ -37,6 +37,11 @@ public class EmployeeController {
     return employeeService.findById(empId);
   }
 
+  @GetMapping("/dept/{deptId}")
+  public List<EmployeeResponseDto> getAllEmpDept(@PathVariable("deptId") int deptId) {
+    return employeeService.findByEmpDept(deptId);
+  }
+
   @PutMapping("/{empId}")
   public EmployeeResponseDto updateDepartment(@PathVariable String empId,
                                               @RequestBody EmployeeUpdateRequestDto updateRequestDto) {
